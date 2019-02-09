@@ -5,23 +5,42 @@ const server = require('./server.js');
 describe('server.js', () => {
   describe('POST', () => {
     it('returns a 200 (OK) status code', async () => {
-      const response = await request(server).post('/games');
+      const body = {
+        title: 'Pacman',
+        genre: 'Arcade',
+        releaseYear: 1980
+      };
+      const response = await request(server).post('/games').send(body);
       expect(response.statusCode).toBe(200);
     });
 
+    it('returns a 422 (Unprocessable Entity) status code', async () => {
+      const body = {
+        title: 'World of Warcraft',
+        releaseYear: 2004
+      };
+      const response = await request(server).post('/games').send(body);
+      expect(response.statusCode).toBe(422);
+    });
+
     it('returns content-type application/json', async () => {
-      const response = await request(server).post('/games');
+      const body = {
+        title: 'Pacman',
+        genre: 'Arcade',
+        releaseYear: 1980
+      };
+      const response = await request(server).post('/games').send(body);
       expect(response.type).toBe('application/json');
     });
 
     it('returns a JSON object', async () => {
-      const expectedBody = {
-        title: 'Pacman', // required
-        genre: 'Arcade', // required
-        releaseYear: 1980 // not required
+      const body = {
+        title: 'Pacman',
+        genre: 'Arcade',
+        releaseYear: 1980
       };
-      const response = await request(server).post('/games');
-      expect(response.body).toEqual(expectedBody);
+      const response = await request(server).post('/games').send(body);
+      expect(response.body).toEqual(body);
     });
   });
 
